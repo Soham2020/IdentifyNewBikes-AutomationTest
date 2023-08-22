@@ -49,11 +49,16 @@ public class FindNewBikes {
 			}
 			
 //			 Click on view more button but not working, giving element is not clickable
-//			WebDriverWait wait = new WebDriverWait(driver, Duration.ofMinutes(2));
-//			
-//			WebElement viewMoreBtn = driver.findElement(By.className("zw-cmn-loadMore"));
-//			WebElement viewMoreBtn = wait.until(ExpectedConditions.elementToBeClickable(By.className("zw-cmn-loadMore")));
-//			viewMoreBtn.click();
+			WebElement viewMoreBtn = driver.findElement(By.xpath("//span[@class='zw-cmn-loadMore']"));
+			JavascriptExecutor js = (JavascriptExecutor)driver;
+			js.executeScript("arguments[0].scrollIntoView(true)", viewMoreBtn);
+			js.executeScript("arguments[0].click()", viewMoreBtn);
+			
+			// get all the Honda bikes
+			List<WebElement> hondaBikes1 = driver.findElements(By.id("modelList"));
+			for (WebElement w : hondaBikes1) {
+				System.out.println(w.getText());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
