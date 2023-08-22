@@ -18,6 +18,7 @@ public class NewTest {
 	public void f() {
 		try {
 			FindNewBikes.findNewBikes(driver);
+			UsedCars.usedCars(driver);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -28,8 +29,10 @@ public class NewTest {
 		try {
 			WebDriverManager.chromedriver().setup();
 			driver = new ChromeDriver();
-			driver.get("https://www.zigwheels.com/");
+//			driver.get("https://www.zigwheels.com/");
+			driver.navigate().to("https://www.zigwheels.com/");
 			driver.manage().window().maximize();
+			driver.manage().timeouts().implicitlyWait(Duration.ofMinutes(1));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
