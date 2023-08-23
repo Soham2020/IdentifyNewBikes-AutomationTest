@@ -2,37 +2,39 @@ package Hackethon.IdentifyNewBikes;
 
 import org.testng.annotations.Test;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 
 import org.testng.annotations.BeforeClass;
 
-import java.time.Duration;
+import java.io.FileReader;
+import java.util.Properties;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterClass;
 
 public class NewTest {
-	static WebDriver driver;
+	public static WebDriver driver;
+
 	@Test
 	public void f() {
 		try {
 			FindNewBikes.findNewBikes(driver);
 			UsedCars.usedCars(driver);
+			LoginPage.loginPage(driver);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@BeforeClass
 	public void beforeClass() {
 		try {
-			WebDriverManager.chromedriver().setup();
-			driver = new ChromeDriver();
-//			driver.get("https://www.zigwheels.com/");
-			driver.navigate().to("https://www.zigwheels.com/");
+			FileReader fr = new FileReader(enter the file of config.properties);
+			Properties p = new Properties();
+			p.load(fr);
+			String url = p.getProperty("url");
+			driver = DriverSetup.driverSetup(driver);
+			driver.navigate().to(url);
 			driver.manage().window().maximize();
-			driver.manage().timeouts().implicitlyWait(Duration.ofMinutes(1));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -41,8 +43,8 @@ public class NewTest {
 	@AfterClass
 	public void afterClass() {
 		try {
-			Thread.sleep(3000);
-			driver.close();
+			Thread.sleep(2000);
+			driver.quit();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
