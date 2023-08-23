@@ -7,6 +7,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 
+import Hackethon.IdentifyNewBikes.utils.WriteExcelData;
+
 public class FindNewBikes {
 	public static void findNewBikes(WebDriver driver) {
 
@@ -50,6 +52,8 @@ public class FindNewBikes {
 			js.executeScript("arguments[0].click()", viewMoreBtn);
 			Thread.sleep(3000);
 
+			WriteExcelData.writeExcelTopCellBikes();
+			int row = 1;
 			// get all the Honda bikes
 			for (int i = 1; i <= 16; i++) {
 				// skip the ad section
@@ -66,9 +70,13 @@ public class FindNewBikes {
 					String c = t[1]; // take only the integer part
 					if (Integer.parseInt(c) < 4) {
 						System.out.println(s);
+						WriteExcelData.writeExcelData(sarr, row, "Bikes");
+						row++;
 					}
 				} else {
 					System.out.println(s);
+					WriteExcelData.writeExcelData(sarr, row, "Bikes");
+					row++;
 				}
 			}
 		} catch (Exception e) {
