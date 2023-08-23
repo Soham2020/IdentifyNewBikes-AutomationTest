@@ -9,6 +9,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import Hackethon.IdentifyNewBikes.utils.WriteExcelData;
+
 public class UsedCars {
 	public static void usedCars(WebDriver driver) {
 		
@@ -29,7 +31,7 @@ public class UsedCars {
 			WebElement usedCar = driver.findElement(usedCarLocator);
 			Thread.sleep(2000);
 			actions.moveToElement(usedCar).perform();
-			
+			Thread.sleep(2000);
 			WebElement getChennai = driver.findElement(getChennaiLocator);
 			getChennai.click();
 			
@@ -39,10 +41,12 @@ public class UsedCars {
 			js.executeScript("arguments[0].scrollIntoView(true)", scrollModel);
 			Thread.sleep(5000);
 			
+			WriteExcelData.writeExcelTopCellCars();
 			// get all the popular cars
 			List<WebElement> l = driver.findElements(popularCarsLocator);
 			for(WebElement w:l) {
 				System.out.println(w.getText());
+				WriteExcelData.writeExcelData(w.getText(), "Cars");
 			}
 			
 		} catch (Exception e) {
