@@ -14,7 +14,7 @@ public class WriteExcelData {
 	static XSSFWorkbook workbook;
 	static XSSFSheet sheet;
 	static XSSFRow row;
-	static String path = "C:\\Users\\2282058\\Downloads\\eclipse-java-2023-03-R-win32-x86_64 (1)\\eclipse\\IdentifyNewBikes\\test-output\\OutputData.xlsx";
+	static String path = "./test-output/OutputData.xlsx";
 	static FileOutputStream fos;
 
 	public static void writeExcelTopCellBikes() throws Exception {
@@ -41,6 +41,7 @@ public class WriteExcelData {
 		row.createCell(0).setCellValue("Bike's Name");
 		row.createCell(1).setCellValue("Price");
 		row.createCell(2).setCellValue("Launched Date");
+		row.createCell(3).setCellValue("Remarks");
 		fos = new FileOutputStream(f);
 		workbook.write(fos);
 	}
