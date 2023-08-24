@@ -14,18 +14,30 @@ public class WriteExcelData {
 	static XSSFWorkbook workbook;
 	static XSSFSheet sheet;
 	static XSSFRow row;
-	static String path = "E:\\eclipse-jee-2023-06-R-win32-x86_64\\eclipse\\IdentifyNewBikes\\test-output\\OutputBikes.xlsx";
+	static String path = "C:\\Users\\2282058\\Downloads\\eclipse-java-2023-03-R-win32-x86_64 (1)\\eclipse\\IdentifyNewBikes\\test-output\\OutputData.xlsx";
 	static FileOutputStream fos;
 
 	public static void writeExcelTopCellBikes() throws Exception {
 
 		f = new File(path);
-		fi = new FileInputStream(f);
+		if(!f.exists()) {
+			workbook = new XSSFWorkbook();
+			fos = new FileOutputStream(path);
+			workbook.write(fos);
+		}
+		
+		fi = new FileInputStream(path);
 
 		workbook = new XSSFWorkbook(fi);
-
+		if(workbook.getSheetIndex("Bikes") == -1) {
+			workbook.createSheet("Bikes");
+		}
+		
 		sheet = workbook.getSheet("Bikes");
-		row = sheet.createRow(0);
+		if(sheet.getRow(0) == null)
+			sheet.createRow(0);
+		row = sheet.getRow(0);
+		
 		row.createCell(0).setCellValue("Bike's Name");
 		row.createCell(1).setCellValue("Price");
 		row.createCell(2).setCellValue("Launched Date");
@@ -36,12 +48,33 @@ public class WriteExcelData {
 	public static void writeExcelTopCellCars() throws Exception {
 
 		f = new File(path);
-		fi = new FileInputStream(f);
+		
+		
+		if(!f.exists()) {
+			workbook = new XSSFWorkbook();
+			fos = new FileOutputStream(path);
+			workbook.write(fos);
+		}
+		
+		fi = new FileInputStream(path);
 
 		workbook = new XSSFWorkbook(fi);
-
-		sheet = workbook.createSheet("Cars");
-		row = sheet.createRow(0);
+		if(workbook.getSheetIndex("Cars") == -1) {
+			workbook.createSheet("Cars");
+		}
+		
+		sheet = workbook.getSheet("Cars");
+		if(sheet.getRow(0) == null)
+			sheet.createRow(0);
+		row = sheet.getRow(0);
+		
+		
+//		fi = new FileInputStream(f);
+//
+//		workbook = new XSSFWorkbook(fi);
+//
+//		sheet = workbook.createSheet("Cars");
+//		row = sheet.createRow(0);
 		row.createCell(0).setCellValue("Car's Name");
 		fos = new FileOutputStream(f);
 		workbook.write(fos);
@@ -50,11 +83,31 @@ public class WriteExcelData {
 	public static void writeExcelData(String[] s, int rowNum, String sheetName) throws Exception {
 
 		f = new File(path);
+//		if(!f.exists()) {
+//			workbook = new XSSFWorkbook();
+//			fos = new FileOutputStream(path);
+//			workbook.write(fos);
+//		}
+//		
+//		fi = new FileInputStream(path);
+//
+//		workbook = new XSSFWorkbook(fi);
+//		if(workbook.getSheetIndex(sheetName) == -1) {
+//			sheet = workbook.createSheet(sheetName);
+//		}
+//		
+//		sheet = workbook.getSheet(sheetName);
+//		if(sheet.getRow(0) == null)
+//			row = sheet.createRow(rowNum);
+//		else
+//			row = sheet.getRow(rowNum);
+		
 		fi = new FileInputStream(f);
 
 		workbook = new XSSFWorkbook(fi);
 
 		sheet = workbook.getSheet(sheetName);
+		Flush();
 
 		row = sheet.createRow(rowNum);
 
@@ -68,17 +121,37 @@ public class WriteExcelData {
 
 		fos = new FileOutputStream(f);
 		workbook.write(fos);
+		fos.close();
 
 	}
 
 	public static void writeExcelData(String s, String sheetName) throws Exception {
 
 		f = new File(path);
+//		if(!f.exists()) {
+//			workbook = new XSSFWorkbook();
+//			fos = new FileOutputStream(path);
+//			workbook.write(fos);
+//		}
+//		
+//		fi = new FileInputStream(path);
+//
+//		workbook = new XSSFWorkbook(fi);
+//		if(workbook.getSheetIndex(sheetName) == -1) {
+//			workbook.createSheet(sheetName);
+//		}
+//		
+//		sheet = workbook.getSheet(sheetName);
+//		if(sheet.getRow(0) == null)
+//			sheet.createRow(0);
+//		row = sheet.getRow(0);
+		
 		fi = new FileInputStream(f);
 
 		workbook = new XSSFWorkbook(fi);
 
 		sheet = workbook.getSheet(sheetName);
+		Flush();
 
 		int rowNum = 1;
 		String[] arr = s.split("\n");
@@ -89,7 +162,13 @@ public class WriteExcelData {
 
 		fos = new FileOutputStream(f);
 		workbook.write(fos);
+		fos.close();
 
+	}
+	
+	public static void Flush() throws Exception {
+		fos = new FileOutputStream(path);
+		fos.flush();
 	}
 
 }
