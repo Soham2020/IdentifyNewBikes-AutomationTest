@@ -6,6 +6,7 @@ import Hackethon.IdentifyNewBikes.Base.DriverSetup;
 import Hackethon.IdentifyNewBikes.Pages.FindNewBikes;
 import Hackethon.IdentifyNewBikes.Pages.LoginPage;
 import Hackethon.IdentifyNewBikes.Pages.UsedCars;
+import Hackethon.IdentifyNewBikes.utils.ExtentReport;
 
 import org.testng.annotations.BeforeClass;
 
@@ -19,20 +20,40 @@ public class NewTest {
 	public static WebDriver driver;
 
 	@Test
-	public void f() {
+	public void FirstTestCase() {
 		try {
 			FindNewBikes.findNewBikes(driver);
-			UsedCars.usedCars(driver);
-			LoginPage.loginPage(driver);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
+	
+	@Test(dependsOnMethods = {"FirstTestCase"} )
+	public void SecondTestCase() {
+		try {
+			UsedCars.usedCars(driver);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+	
+	@Test(dependsOnMethods = {"SecondTestCase"} )
+	public void ThirdTestCase() {
+		try {
+			LoginPage.loginPage(driver);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+	
 	@BeforeClass
 	public void beforeClass() {
 		try {
-			FileReader fr = new FileReader("C:\\Users\\2282058\\Downloads\\eclipse-java-2023-03-R-win32-x86_64 (1)\\eclipse\\IdentifyNewBikes\\src\\main\\java\\Hackethon\\IdentifyNewBikes\\Config\\config.properties");
+			FileReader fr = new FileReader("./Resource/config.properties");
 			Properties p = new Properties();
 			p.load(fr);
 			String url = p.getProperty("url");
@@ -47,6 +68,7 @@ public class NewTest {
 	@AfterClass
 	public void afterClass() {
 		try {
+			ExtentReport.Flush();
 			Thread.sleep(2000);
 			driver.quit();
 		} catch (Exception e) {

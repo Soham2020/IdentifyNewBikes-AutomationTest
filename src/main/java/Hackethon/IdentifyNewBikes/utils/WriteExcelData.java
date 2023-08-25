@@ -3,10 +3,12 @@ package Hackethon.IdentifyNewBikes.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.List;
 
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openqa.selenium.WebElement;
 
 public class WriteExcelData {
 	static File f;
@@ -126,7 +128,7 @@ public class WriteExcelData {
 
 	}
 
-	public static void writeExcelData(String s, String sheetName) throws Exception {
+	public static void writeExcelData(List<WebElement> arr, String sheetName) throws Exception {
 
 		f = new File(path);
 //		if(!f.exists()) {
@@ -155,10 +157,9 @@ public class WriteExcelData {
 		Flush();
 
 		int rowNum = 1;
-		String[] arr = s.split("\n");
-		for (int i = 0; i < arr.length; i++) {
+		for (int i = 0; i < arr.size(); i++) {
 			row = sheet.createRow(rowNum++);
-			row.createCell(0).setCellValue(arr[i]);
+			row.createCell(0).setCellValue(arr.get(i).getText());
 		}
 
 		fos = new FileOutputStream(f);

@@ -7,18 +7,58 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
+
+import Hackethon.IdentifyNewBikes.utils.ExtentReport;
+import Hackethon.IdentifyNewBikes.utils.Highlight;
 import Hackethon.IdentifyNewBikes.utils.WriteExcelData;
 
 public class FindNewBikes {
+	public static ExtentReport report = new ExtentReport();
+	public static ExtentReports extent = ExtentReport.getInstance();
+	public static ExtentTest logger;
+	
+	static By newBikesLocator = By.linkText("New Bikes");
+	static By upcomingBikesLocator = By.xpath("//div[@id='headerNewNavWrap']/nav/div/ul/li[3]/ul/li[5]/span");
+	static By selectManufactureLocator = By.className("custom-select");
+	static By viewMoreBtnLocator = By.className("zw-cmn-loadMore");
+	
+
+	
 	public static void findNewBikes(WebDriver driver) {
-
-		By newBikesLocator = By.linkText("New Bikes");
-		By upcomingBikesLocator = By.xpath("//div[@id='headerNewNavWrap']/nav/div/ul/li[3]/ul/li[5]/span");
-		By selectManufactureLocator = By.className("custom-select");
-		By viewMoreBtnLocator = By.className("zw-cmn-loadMore");
-
+		
 		try {
-			JavascriptExecutor js = (JavascriptExecutor) driver;
+			
+			// create a test case log in extent report
+			logger = extent.createTest("Search for Upcoming Bikes");
+			searchUpcomingBikes(driver);
+
+			// create a test case log in extent report
+			logger = extent.createTest("Searched for Honda Bikes");
+			searchHondaBikes(driver);
+			Thread.sleep(2000);
+
+			// select the <a> tag link of bike's price under 5 lakhs
+			/*
+			 * WebElement upcomingBikeUnderFive =
+			 * driver.findElement(By.xpath("//ul[@class='lnk-lst']/li[5]/a")); String url =
+			 * upcomingBikeUnderFive.getAttribute("href"); driver.navigate().to(url);
+			 */
+			
+			// create a test case log in extent report
+			logger = extent.createTest("Bikes under 4 Lakhs");
+			searchHondaBikesUnder4Lakh(driver);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	public static void searchUpcomingBikes(WebDriver driver) {
+		try {
 			// instantiating actions class
 			Actions actions = new Actions(driver);
 
@@ -31,27 +71,40 @@ public class FindNewBikes {
 
 			// clicking on the upcoming bikes
 			WebElement upcomingBikes = driver.findElement(upcomingBikesLocator);
+			Highlight.highlight(driver, upcomingBikesLocator);		//highlight
 			upcomingBikes.click();
-
+			
+			logger.log(Status.PASS ,"Search for Upcoming Bikes passed");
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.log(Status.FAIL ,"Search for Upcoming Bikes failed");
+		}
+	}
+	
+	public static void searchHondaBikes(WebDriver driver) {
+		try {
 			// selecting Honda brand from the drop-down
 			WebElement selectManufacture = driver.findElement(selectManufactureLocator);
 			Select select = new Select(selectManufacture);
+			Highlight.highlight(driver, selectManufactureLocator);		//highlight
 			select.selectByVisibleText("Honda");
+			
+			logger.log(Status.PASS ,"Search for Honda Bikes passed");
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.log(Status.FAIL ,"Search for Honda Bikes failed");
+		}
+	}
+	
+	public static void searchHondaBikesUnder4Lakh(WebDriver driver) {
 
-			Thread.sleep(2000);
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		WebElement viewMoreBtn = driver.findElement(viewMoreBtnLocator);
+		js.executeScript("arguments[0].scrollIntoView(true)", viewMoreBtn);
+		js.executeScript("arguments[0].click()", viewMoreBtn);
 
-			// select the <a> tag link of bike's price under 5 lakhs
-			/*
-			 * WebElement upcomingBikeUnderFive =
-			 * driver.findElement(By.xpath("//ul[@class='lnk-lst']/li[5]/a")); String url =
-			 * upcomingBikeUnderFive.getAttribute("href"); driver.navigate().to(url);
-			 */
-
-			WebElement viewMoreBtn = driver.findElement(viewMoreBtnLocator);
-			js.executeScript("arguments[0].scrollIntoView(true)", viewMoreBtn);
-			js.executeScript("arguments[0].click()", viewMoreBtn);
-			Thread.sleep(3000);
-
+		
+		try {
 			WriteExcelData.writeExcelTopCellBikes();
 			int row = 1;
 			// get all the Honda bikes
@@ -79,9 +132,10 @@ public class FindNewBikes {
 					row++;
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+			logger.log(Status.PASS ,"Honda Bikes fetched successfully");
+		}catch (Exception e) {
+			// TODO: handle exception
+			logger.log(Status.FAIL ,"Honda Bikes fetched failed");
 		}
-
 	}
 }
