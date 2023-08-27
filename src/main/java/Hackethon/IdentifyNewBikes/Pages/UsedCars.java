@@ -13,12 +13,12 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 
+import Hackethon.IdentifyNewBikes.Base.DriverSetup;
 import Hackethon.IdentifyNewBikes.utils.ExtentReport;
 import Hackethon.IdentifyNewBikes.utils.Highlight;
 import Hackethon.IdentifyNewBikes.utils.WriteExcelData;
 
-public class UsedCars {
-	public static ExtentReport report = new ExtentReport();
+public class UsedCars extends DriverSetup {
 	public static ExtentTest logger;
 	public static ExtentReports extent = ExtentReport.getInstance();
 
@@ -27,7 +27,7 @@ public class UsedCars {
 	static By scrollModelLocator = By.className("gsc_thin_scroll");
 	static By popularCarsLocator = By.xpath("//div[@class='zw-sr-secLev usedCarMakeModelList popularModels ml-20 mt-10']");
 
-	public static void UsedCarsChennai(WebDriver driver) {
+	public static void UsedCarsChennai() {
 		try {
 			// instantiating actions class
 			Actions actions = new Actions(driver);
@@ -43,11 +43,11 @@ public class UsedCars {
 			logger.log(Status.PASS ,"Used Cars in Chennai is selected");
 		} catch (Exception e) {
 			// TODO: handle exception
-			logger.log(Status.FAIL ,"Used Cars in Chennai is not selected");
+			logger.log(Status.FAIL ,e.getMessage());
 		}
 	}
 	
-	public static void PopularModels(WebDriver driver) {
+	public static void PopularModels() {
 		try {
 			// scroll down is working
 			JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -67,13 +67,13 @@ public class UsedCars {
 			logger.log(Status.PASS ,"Popular Models fetched");
 		}catch (Exception e) {
 			// TODO: handle exception
-			logger.log(Status.FAIL ,"Popular Models not fetched");
+			logger.log(Status.FAIL ,e.getMessage());
 		}
 	}
 
 	
 	
-	public static void usedCars(WebDriver driver) {
+	public static void usedCars() {
 		try {
 			// Get back to main page
 			driver.navigate().back();
@@ -82,11 +82,11 @@ public class UsedCars {
 
 			// create a test case log in extent report
 			logger = extent.createTest("Used Cars in Chennai");
-			UsedCarsChennai(driver);
+			UsedCarsChennai();
 			
 			// create a test case log in extent report
 			logger = extent.createTest("Popular Models in Chennai");
-			PopularModels(driver);
+			PopularModels();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

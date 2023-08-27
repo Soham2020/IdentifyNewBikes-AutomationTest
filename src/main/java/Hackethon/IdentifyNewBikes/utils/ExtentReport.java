@@ -1,10 +1,12 @@
 package Hackethon.IdentifyNewBikes.utils;
 
 import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 
 public class ExtentReport {
 	public static ExtentReports extent;
+	public static ExtentTest logger;
 	
 	
 	public static ExtentReports getInstance() {
@@ -14,7 +16,7 @@ public class ExtentReport {
 		return extent;
 	}
 	
-	private static ExtentReports createInstance(String fileName) {
+	public static ExtentReports createInstance(String fileName) {
 
         // Create an HTML reporter to generate the Extent report.
 

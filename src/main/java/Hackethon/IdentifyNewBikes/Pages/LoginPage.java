@@ -10,16 +10,16 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 
+import Hackethon.IdentifyNewBikes.Base.DriverSetup;
 import Hackethon.IdentifyNewBikes.utils.ExtentReport;
 import Hackethon.IdentifyNewBikes.utils.Highlight;
 import Hackethon.IdentifyNewBikes.utils.ScreenShot;
 
-public class LoginPage {
-	public static ExtentReport report = new ExtentReport();
+public class LoginPage extends DriverSetup {
 	public static ExtentTest logger;
 	public static ExtentReports extent = ExtentReport.getInstance();
 	
-	public static void loginPage(WebDriver driver) {
+	public static void loginPage() {
 		By clickLoginLocator = By.id("forum_login_title_lg");
 		By clickGoogleLocator = By.xpath("//div[@class='lgn-sc c-p txt-l pl-30 pr-30 googleSignIn']");
 		By searchFieldLocator = By.xpath("//input[@type='email']");
@@ -57,13 +57,12 @@ public class LoginPage {
 			String msg = err.getText();
 			String[] marr = msg.split("\n");
 			System.out.println(marr[1]);
-			ScreenShot.screenShot(driver);
 			
-			logger.log(Status.PASS ,"Invalid Login Details, Test Case passed");
+			logger.log(Status.FAIL ,"Invalid Login Details, Test Case passed");
+			ScreenShot.screenShot(driver);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			logger.log(Status.FAIL ,"Invalid Login Details, Test Case failed");
 		}
 	}
 }

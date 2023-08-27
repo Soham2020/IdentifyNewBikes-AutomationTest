@@ -11,12 +11,13 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 
+import Hackethon.IdentifyNewBikes.Base.DriverSetup;
 import Hackethon.IdentifyNewBikes.utils.ExtentReport;
 import Hackethon.IdentifyNewBikes.utils.Highlight;
 import Hackethon.IdentifyNewBikes.utils.WriteExcelData;
 
-public class FindNewBikes {
-	public static ExtentReport report = new ExtentReport();
+public class FindNewBikes extends DriverSetup {
+//	public static ExtentReport report = new ExtentReport();
 	public static ExtentReports extent = ExtentReport.getInstance();
 	public static ExtentTest logger;
 	
@@ -27,29 +28,22 @@ public class FindNewBikes {
 	
 
 	
-	public static void findNewBikes(WebDriver driver) {
+	public static void findNewBikes() {
 		
 		try {
 			
 			// create a test case log in extent report
 			logger = extent.createTest("Search for Upcoming Bikes");
-			searchUpcomingBikes(driver);
+			searchUpcomingBikes();
 
 			// create a test case log in extent report
 			logger = extent.createTest("Searched for Honda Bikes");
-			searchHondaBikes(driver);
+			searchHondaBikes();
 			Thread.sleep(2000);
-
-			// select the <a> tag link of bike's price under 5 lakhs
-			/*
-			 * WebElement upcomingBikeUnderFive =
-			 * driver.findElement(By.xpath("//ul[@class='lnk-lst']/li[5]/a")); String url =
-			 * upcomingBikeUnderFive.getAttribute("href"); driver.navigate().to(url);
-			 */
 			
 			// create a test case log in extent report
 			logger = extent.createTest("Bikes under 4 Lakhs");
-			searchHondaBikesUnder4Lakh(driver);
+			searchHondaBikesUnder4Lakh();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -57,7 +51,7 @@ public class FindNewBikes {
 
 	}
 	
-	public static void searchUpcomingBikes(WebDriver driver) {
+	public static void searchUpcomingBikes() {
 		try {
 			// instantiating actions class
 			Actions actions = new Actions(driver);
@@ -75,13 +69,15 @@ public class FindNewBikes {
 			upcomingBikes.click();
 			
 			logger.log(Status.PASS ,"Search for Upcoming Bikes passed");
+			
 		} catch (Exception e) {
 			// TODO: handle exception
-			logger.log(Status.FAIL ,"Search for Upcoming Bikes failed");
+			logger.log(Status.FAIL, e.getMessage());
+			e.printStackTrace();		
 		}
 	}
 	
-	public static void searchHondaBikes(WebDriver driver) {
+	public static void searchHondaBikes() {
 		try {
 			// selecting Honda brand from the drop-down
 			WebElement selectManufacture = driver.findElement(selectManufactureLocator);
@@ -90,13 +86,15 @@ public class FindNewBikes {
 			select.selectByVisibleText("Honda");
 			
 			logger.log(Status.PASS ,"Search for Honda Bikes passed");
+			
 		} catch (Exception e) {
 			// TODO: handle exception
-			logger.log(Status.FAIL ,"Search for Honda Bikes failed");
+			logger.log(Status.FAIL , e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
-	public static void searchHondaBikesUnder4Lakh(WebDriver driver) {
+	public static void searchHondaBikesUnder4Lakh() {
 
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		WebElement viewMoreBtn = driver.findElement(viewMoreBtnLocator);
@@ -135,7 +133,7 @@ public class FindNewBikes {
 			logger.log(Status.PASS ,"Honda Bikes fetched successfully");
 		}catch (Exception e) {
 			// TODO: handle exception
-			logger.log(Status.FAIL ,"Honda Bikes fetched failed");
+			logger.log(Status.FAIL ,e.getMessage());
 		}
 	}
 }
