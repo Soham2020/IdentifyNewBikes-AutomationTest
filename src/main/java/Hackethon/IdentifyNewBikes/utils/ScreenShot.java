@@ -7,13 +7,9 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 
-import com.aventstack.extentreports.ExtentReports;
-import com.aventstack.extentreports.ExtentTest;
-
 public class ScreenShot {
-
-	public static void screenShot(WebDriver driver) {
-		String path = "./test-output/screenshot.png";
+	public void screenShot(WebDriver driver,String imgName) {
+		String path = "C:\\Users\\2282058\\Downloads\\eclipse-java-2023-03-R-win32-x86_64 (1)\\eclipse\\IdentifyNewBikes\\screenshots\\"+imgName+".png";
 		TakesScreenshot screenshot = (TakesScreenshot) driver;
 		File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
 		File destFile = new File(path);

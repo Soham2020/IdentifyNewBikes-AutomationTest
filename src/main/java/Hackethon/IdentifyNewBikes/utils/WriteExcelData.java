@@ -43,7 +43,6 @@ public class WriteExcelData {
 		row.createCell(0).setCellValue("Bike's Name");
 		row.createCell(1).setCellValue("Price");
 		row.createCell(2).setCellValue("Launched Date");
-		row.createCell(3).setCellValue("Remarks");
 		fos = new FileOutputStream(f);
 		workbook.write(fos);
 	}

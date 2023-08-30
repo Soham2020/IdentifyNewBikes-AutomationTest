@@ -1,33 +1,30 @@
 package Hackethon.IdentifyNewBikes.Pages;
 
-import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import com.aventstack.extentreports.ExtentReports;
-import com.aventstack.extentreports.ExtentTest;
-import com.aventstack.extentreports.Status;
-
 import Hackethon.IdentifyNewBikes.Base.DriverSetup;
-import Hackethon.IdentifyNewBikes.utils.ExtentReport;
 import Hackethon.IdentifyNewBikes.utils.Highlight;
+import Hackethon.IdentifyNewBikes.utils.ScreenShot;
 import Hackethon.IdentifyNewBikes.utils.WriteExcelData;
 
 public class UsedCars extends DriverSetup {
-	public static ExtentTest logger;
-	public static ExtentReports extent = ExtentReport.getInstance();
 
-	static By usedCarLocator = By.linkText("Used Cars");
-	static By getChennaiLocator = By.xpath("//span[text()='Chennai']");
-	static By scrollModelLocator = By.className("gsc_thin_scroll");
-	static By popularCarsLocator = By.xpath("//div[@class='zw-sr-secLev usedCarMakeModelList popularModels ml-20 mt-10']");
+	By usedCarLocator = By.linkText("Used Cars");
+	By getChennaiLocator = By.xpath("//span[text()='Chennai']");
+//	By scrollModelLocator = By.xpath("//div[@class='zm-cmn-colorBlack ml-30 mob-nonclick div-h3 mt-20 mb-10']");
+	By popularCarsLocator = By.xpath("//div[@class='zw-sr-secLev usedCarMakeModelList popularModels ml-20 mt-10']");
+	By modelListLocator = By.tagName("li");
+	By zigWheelsPath = By.xpath("//a[@class = 'zw i-b mt-10 pt-2']");
 
-	public static void UsedCarsChennai() {
+	ScreenShot ss = new ScreenShot();
+
+	public void UsedCarsChennai() throws Exception {
 		try {
 			// instantiating actions class
 			Actions actions = new Actions(driver);
@@ -40,50 +37,55 @@ public class UsedCars extends DriverSetup {
 			Highlight.highlight(driver, getChennaiLocator); // highlight
 			getChennai.click();
 
-			logger.log(Status.PASS ,"Used Cars in Chennai is selected");
+			reportPass("Used Cars in Chennai is selected");
 		} catch (Exception e) {
 			// TODO: handle exception
-			logger.log(Status.FAIL ,e.getMessage());
+			String imgName = "UsedCarsChennai";
+			ss.screenShot(driver, imgName);
+			reportFail("Used Cars in Chennai is not selected", imgName);
 		}
 	}
-	
-	public static void PopularModels() {
+
+	public void PopularModels() throws Exception {
 		try {
 			// scroll down is working
 			JavascriptExecutor js = (JavascriptExecutor) driver;
-			WebElement scrollModel = driver.findElement(scrollModelLocator);
+			WebElement scrollModel = driver.findElement(popularCarsLocator);
+//			Thread.sleep(3000);
 			js.executeScript("arguments[0].scrollIntoView(true)", scrollModel);
-			Thread.sleep(3000);
 
 			WriteExcelData.writeExcelTopCellCars();
 
 			// get all the popular cars
-			List<WebElement> l = driver.findElements(popularCarsLocator);
-			for (WebElement w : l) {
-				System.out.println(w.getText());
+			List<WebElement> l = driver.findElements(modelListLocator);
+			List<String> model = new ArrayList<String>();
+			for(int i=0;i<l.size();i++) {
+				System.out.println(l.get(i).getText());
+				model.add(l.get(i).getText());
 			}
 			WriteExcelData.writeExcelData(l, "Cars");
-			
-			logger.log(Status.PASS ,"Popular Models fetched");
-		}catch (Exception e) {
+
+			reportPass("Popular Models fetched");
+		} catch (Exception e) {
 			// TODO: handle exception
-			logger.log(Status.FAIL ,e.getMessage());
+			String imgName = "PopularModels";
+			ss.screenShot(driver, imgName);
+			reportFail("Popular Models not fetched", imgName);
 		}
 	}
 
-	
-	
-	public static void usedCars() {
+	public void usedCars() throws Exception {
 		try {
 			// Get back to main page
-			driver.navigate().back();
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-			driver.navigate().back();
+			JavascriptExecutor js = (JavascriptExecutor)driver;
+			WebElement zigWheels = driver.findElement(zigWheelsPath);
+			js.executeScript("arguments[0].click()", zigWheels);
+			Highlight.highlight(driver, zigWheelsPath); // highlight
 
 			// create a test case log in extent report
 			logger = extent.createTest("Used Cars in Chennai");
 			UsedCarsChennai();
-			
+
 			// create a test case log in extent report
 			logger = extent.createTest("Popular Models in Chennai");
 			PopularModels();

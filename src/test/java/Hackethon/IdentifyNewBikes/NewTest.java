@@ -9,32 +9,32 @@ import Hackethon.IdentifyNewBikes.Pages.UsedCars;
 import Hackethon.IdentifyNewBikes.utils.ExtentReport;
 
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Parameters;
 
-import java.io.FileReader;
-import java.time.Duration;
-import java.util.Properties;
 
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterClass;
 
 public class NewTest {
 	public static WebDriver driver;
-	DriverSetup setup = new DriverSetup();
 
-	@Test
+	DriverSetup setup = new DriverSetup();
+	FindNewBikes findNewBikes = new FindNewBikes();
+	LoginPage loginPage = new LoginPage();
+	UsedCars usedCars = new UsedCars();
+
+	@Test(priority = 1, groups = "Smoke")
 	public void FirstTestCase() {
 		try {
-			FindNewBikes.findNewBikes();
+			findNewBikes.findNewBikes();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	@Test(dependsOnMethods = {"FirstTestCase"} )
+	@Test(priority = 2, groups = "Regression")
 	public void SecondTestCase() {
 		try {
-			UsedCars.usedCars();
+			usedCars.usedCars();
 		}
 		catch (Exception e) {
 			// TODO: handle exception
@@ -42,35 +42,58 @@ public class NewTest {
 		}
 	}
 	
-	@Test(dependsOnMethods = {"SecondTestCase"} )
+	@Test(priority = 3, groups = "Smoke")
 	public void ThirdTestCase() {
 		try {
-			LoginPage.loginPage();
+			loginPage.loginPage();
 		}
 		catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
 	}
-	
-	@BeforeClass
+
+//	@Test(groups = "Regression")
+//	public void FirstTestCase1() {
+//		try {
+//			FindNewBikes.findNewBikes();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
+//	
+//	@Test(dependsOnMethods = {"FirstTestCase1"}, groups = "Regression" )
+//	public void SecondTestCase1() {
+//		try {
+//			UsedCars.usedCars();
+//		}
+//		catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//		}
+//	}
+//	
+//	@Test(dependsOnMethods = {"SecondTestCase1"}, groups = "Regression" )
+//	public void ThirdTestCase1() {
+//		try {
+//			LoginPage.loginPage();
+//		}
+//		catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//		}
+//	}
+
+	@BeforeClass(alwaysRun = true)
 	public void beforeClass() {
 		try {
-//			FileReader fr = new FileReader("./Resource/config.properties");
-//			Properties p = new Properties();
-//			p.load(fr);
-//			String url = p.getProperty("url");
-//			driver = DriverSetup.driverSetup(driver);
-//			driver.navigate().to(url);
-//			driver.manage().window().maximize();
-//			driver.manage().timeouts().pageLoadTimeout(Duration.ofMinutes(1));
 			setup.driverSetup("chrome");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	@AfterClass
+	@AfterClass(alwaysRun = true)
 	public void afterClass() {
 		try {
 			ExtentReport.Flush();
